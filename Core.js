@@ -90,6 +90,11 @@ export class Core {
             return
         }
 
+        if (!this.exists(`${DATA_DIR}/${series_name}`)) {
+            this.log(`${DATA_DIR}/${series_name} 目录不存在，请先创建并放入ass字幕文件`)
+            return
+        }
+
         const root = this.readSyncerDB(series_name)
         if (!root) {
             this.log(`播放历史数据库读取失败，路径: ${series_name}/sub_syncer.db`)
@@ -275,7 +280,7 @@ export class Core {
 
             // finished! generate the new srt file from modified ass
             // insert watermark sub if necessary
-            if (this.getConfigBool('subsyncer.watermark', false)) {
+            if (this.getConfigBool('subsyncer.watermark', true)) {
                 max_result.ass.splice(0, 0, {
                     start: 0,
                     end: 5000,
@@ -313,7 +318,7 @@ export class Core {
         if (low_match_eps.length) {
             this.logMain(__PRINT_SEPARATOR__)
             this.logMain(`${low_match_eps.length} 个文件的匹配率低于${LOW_MATCH_RATE * 100}%：${low_match_eps.join(', ')}`)
-            this.logMain('建议查看相关日志，删除生成的srt文件\n然后参考github文档修改helper.conf中的关键参数后再重试')
+            this.logMain('建议查看相关日志，删除生成的srt文件\n然后参考github文档修改sub_syncer.conf中的关键参数后再重试')
         }
 
         this.logMain(__PRINT_SEPARATOR_EX__)
