@@ -39,7 +39,7 @@ Windows用户需要自行安装iCloud并开启iCloud云盘。
 
 1. 请先确保你已经将iOS的外挂字幕插件更新到了最新版。已支持的流媒体平台如下表：  
    | 平台  | 外挂字幕 | 去广告 | 强制1080p |
-   | :-: | :-: | :-: | :-: | :-: |
+   | :-: | :-: | :-: | :-: |
    | [Hulu](https://github.com/liunice/HuluHelper) | ✅ | ✅ | ✅ |
    | [HBO Max](https://github.com/liunice/HBOMaxHelper) | ✅ |  | ✅ |
    | [Paramount+](https://github.com/liunice/ParamountHelper) | ✅ |  | ✅ |
