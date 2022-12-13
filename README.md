@@ -46,15 +46,16 @@ Windows用户需要自行安装iCloud并开启iCloud云盘。
    | [Peacock](https://github.com/liunice/PeacockHelper) | ✅ | ✅ | ✅ |
    | [Lionsgate+/STARZ](https://github.com/liunice/LionsgateHelper) | ✅ |  | ✅ |
    | [Britbox UK](https://github.com/liunice/BritboxHelper) | ✅ |  | ✅ |
-2. 安装``NodeJS``最新版，具体方法请参照[NodeJS官网](https://nodejs.org/en/download/)
-3. Windows用户请到``Microsoft Store``安装``iCloud``并开启``iCloud云盘``，并等待云盘下的``Quantumult X``目录完成云同步
-4. 打开命令行工具，输入``git clone https://github.com/liunice/AutoSubSyncer``，等待命令完成
-5. 运行``cd``命令切换到``AutoSubSyncer``目录，输入``npm install``，等待依赖组件安装完成。  
+2. 确保``git``工具已安装。如未安装请参考[git官网](https://git-scm.com/downloads)
+3. 安装``NodeJS``最新版，具体方法请参照[NodeJS官网](https://nodejs.org/en/download/)
+4. Windows用户请到``Microsoft Store``安装``iCloud``并开启``iCloud云盘``，并等待云盘下的``Quantumult X``目录完成云同步
+5. 打开命令行工具，输入``git clone https://github.com/liunice/AutoSubSyncer``，等待命令完成
+6. 运行``cd``命令切换到``AutoSubSyncer``目录，输入``npm install``，等待依赖组件安装完成。  
    Windows用户如遇到类似``Visual Studio not found``的错误提示，请参考[此页面](https://github.com/nodejs/node-gyp#on-windows)安装``Visual Studio Build Tools``
 
 
 ## 如何运行
-以HBO Max``The White Lotus``这部剧的``第一季``为例，其他平台也是类似的。  
+以HBO Max上``The White Lotus``这部剧的``第一季``为例，其他平台也是类似的。  
 1. 在QuanX中开启HBO Max的外挂字幕插件
 2. 播放``第一季第一集``，等待出现``正在播放剧集``的通知，注意方括号中的英文是本剧集名称，然后关闭播放器
 3. 打开项目根目录下的``data``目录，新建文件夹``The White Lotus``，注意文件夹的名称是参考上一步通知中方括号里的英文
