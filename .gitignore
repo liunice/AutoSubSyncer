@@ -1,3 +1,10 @@
+# Project specific
+test.js
+data/*
+.*
+!/.gitignore
+!data/.gitkeep
+
 # Logs
 logs
 *.log
