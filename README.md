@@ -49,7 +49,7 @@ Windows用户需要自行安装iCloud并开启iCloud云盘。
 2. 安装``NodeJS``最新版，具体方法请参照[NodeJS官网](https://nodejs.org/en/download/)
 3. Windows用户请到``Microsoft Store``安装``iCloud``并开启``iCloud云盘``，并等待云盘下的``Quantumult X``目录完成云同步
 4. 打开命令行工具，输入``git clone https://github.com/liunice/AutoSubSyncer``，等待命令完成
-5. 输入``npm install``，等待依赖组件安装完成。  
+5. 运行``cd``命令切换到``AutoSubSyncer``目录，输入``npm install``，等待依赖组件安装完成。  
    Windows用户如遇到类似``Visual Studio not found``的错误提示，请参考[此页面](https://github.com/nodejs/node-gyp#on-windows)安装``Visual Studio Build Tools``
 
 
@@ -77,7 +77,7 @@ Windows用户需要自行安装iCloud并开启iCloud云盘。
 其他4个文件名中带数字的是可选方案配置文件，目前支持5个参数的配置，不建议修改。  
 程序通过使用这5个配置文件，来为每一个ass字幕完成5轮匹配算法，最终挑选一个匹配率最高的作为最佳方案。  
 
-#### 主配置文件参数
+### 主配置文件参数
 ``subsyncer.series``  
 默认值：``无``。**此参数在每次运行程序前必填**。对应剧集的英文名称，应和每次弹出的``正在播放剧集``通知中的英文名相同。
 
@@ -103,6 +103,7 @@ Windows用户需要自行安装iCloud并开启iCloud云盘。
 默认值：``1``。程序默认使用``config``目录下的5个配置文件来完成5轮匹配。如果只希望使用主配置文件，可以将此参数设为``0``
 
 ## 注意事项
+- 不建议把项目放在中文目录下
 - 程序默认Windows下的iCloud云盘在``C:\Users\用户名\iCloudDrive``下。如有变更，请自行修改源代码，位置在``Core.js``的``getICloudPath``函数
 - 程序支持自动检测ass字幕文件编码，但不支持``UTF16-BE``等少数冷门编码，请自行转换成``UTF-8``
 - 程序需要读取和写入iCloud云盘，当你发现任何问题的时候，请第一时间检查iCloud是否已同步
