@@ -13,7 +13,7 @@ const DATA_DIR = 'data'
 const CONF_DIR = 'config'
 const LOG_DIR = 'log'
 const VTT_DIR = 'vtt'
-const FN_MIN_LOG = 'main.log'
+const FN_MAIN_LOG = 'main.log'
 const FN_SUB_SYNCER_DB = 'sub_syncer.db'
 
 // 此参数为每条ass字幕在vtt字幕中向前搜索的最大条目数
@@ -1028,7 +1028,7 @@ export class Core {
     }
 
     saveMainLog(series_name) {
-        const path = `${DATA_DIR}/${series_name}/${LOG_DIR}/${FN_MIN_LOG}`
+        const path = `${DATA_DIR}/${series_name}/${LOG_DIR}/${FN_MAIN_LOG}`
         this.writeFile(path, this.main_log)
     }
 
