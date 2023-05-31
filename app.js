@@ -17,6 +17,8 @@ import fetch from 'isomorphic-fetch'
                 return await getVTT_hulu(syncer, url)
             case 'paramount+':
                 return await getVTT_paramount(syncer, url)
+            case 'max':
+                return await getVTT_max(syncer, url)
             default:
                 return null
         }
@@ -236,6 +238,68 @@ X-TIMESTAMP-MAP=LOCAL:00:00:00.000,MPEGTS:9000
         }
 
         return content
+    }
+
+    // url=https://cf.prd.media.h264.io/r/hls.m3u8?f.audioTrack=en-US%7Cdescriptive%2Cprogram&f.audioTrack=es-419%7Cprogram&f.audioTrack=es-ES%7Cprogram&f.initialBitrate=2000&f.textTrack=en-US&f.textTrack=es-419&f.textTrack=es-ES&r.duration=15.015000&r.duration=6.006000&r.duration=8.008000&r.duration=4846.299792&r.duration=69.069000&r.duration=312.979333&r.host=https%3A%2F%2Fakm.prd.media.h264.io&r.keymod=1&r.main=3&r.manifest=fb76c79d-b3ef-4f44-b6a2-244a72cca3f0%2F0_50582e.m3u8&r.manifest=5ca334f2-9ddf-4ca9-835e-497683f2845b%2F0_a129e7.m3u8&r.manifest=2910b591-e828-423a-95fc-f7e36c5f83c3%2F0_a916b7.m3u8&r.manifest=fc54fbe9-70a1-41b2-8b30-f5186f09c0ca%2F2_d37cef.m3u8&r.manifest=57048c11-43ba-4b81-8548-27fa26ad680e%2F0_5c1c99.m3u8&r.manifest=1ecae8c0-897b-4cd3-9910-2272a31242a6%2F0_f185c8.m3u8&r.origin=wbd
+    async function getVTT_max(syncer, url) {
+        let main_manifest_idx = 0
+        const mUrl = /&r\.main=(\d+)/.exec(url)
+        if (mUrl) {
+            main_manifest_idx = parseInt(mUrl[1])
+        }
+        const durations = [...url.matchAll(/&r\.duration=([\d\.]+)/g)]
+        const main_duration = parseFloat(durations[main_manifest_idx][1])
+
+        // get main manifest url
+        const hostPath = getHostPath(url)
+        const manifest_urls = [...url.matchAll(/&r\.manifest=([^&]+)/g)].map(m => hostPath + decodeURIComponent(m[1]))
+        const main_url = manifest_urls[main_manifest_idx]
+        console.log(main_url)
+        // get vtt list url
+        const hlsBody = await getBody(main_url)
+        // #EXT-X-MEDIA:TYPE=SUBTITLES,URI="2_1aa3cd_t_t32.m3u8",GROUP-ID="vtt",LANGUAGE="en-US"
+        const mHls = /#EXT-X-MEDIA:TYPE=SUBTITLES,URI="([^"]+)",GROUP-ID="vtt",LANGUAGE="en-US"/i.exec(hlsBody)
+        if (!mHls) {
+            console.log('vtt字幕列表url获取失败...')
+            return null
+        }
+        // https://cf.prd.media.h264.io/72598e24-8b77-4b57-b9b2-8256834072a9/2_1aa3cd_t_t32.m3u8
+        const vttListUrl = getPath(main_url) + mHls[1]
+        console.log(vttListUrl)
+
+        const body = await getBody(vttListUrl)
+        let content = `WEBVTT
+X-TIMESTAMP-MAP=LOCAL:00:00:00.000,MPEGTS:9000
+
+`
+        let matches = [...body.matchAll(/#EXTINF:([\d\.]+),\s+(.+)/g)]
+        let vtt_duration = 0
+        const vtt_urls = []
+        for (let i = 0; i < matches.length; i++) {
+            vtt_duration += parseFloat(matches[i][1])
+            const vtt_url = getPath(vttListUrl) + matches[i][2]
+            vtt_urls.push(vtt_url)
+        }
+        if (Math.abs(vtt_duration - main_duration) >= 300) {
+            // 差距超过300秒认为不正常
+            console.log(`异常！合并后的vtt时长为 ${vtt_duration}秒，远小于url中的时长 ${main_duration}秒`)
+            return null
+        }
+
+        try {
+            content += await syncer.download_vtts(vtt_urls)
+            console.log('Success! All vtt files downloaded.')
+        }
+        catch (e) {
+            console.log('!!! vtt files download failed:', e)
+            return null
+        }
+
+        return content
+    }
+
+    function getHostPath(url) {
+        return new URL(url).origin + '/'
     }
 
     function getPath(url) {

@@ -42,6 +42,7 @@ Windows用户需要自行安装iCloud并开启iCloud云盘。
    | :-: | :-: | :-: | :-: |
    | [Hulu](https://github.com/liunice/HuluHelper) | ✅ | ✅ | ✅ |
    | [HBO Max](https://github.com/liunice/HBOMaxHelper) | ✅ |  | ✅ |
+   | [Max](https://github.com/liunice/MaxHelper) | ✅ |  | ✅ |
    | [Paramount+](https://github.com/liunice/ParamountHelper) | ✅ |  | ✅ |
    | [Peacock](https://github.com/liunice/PeacockHelper) | ✅ | ✅ | ✅ |
    | [Lionsgate+/STARZ](https://github.com/liunice/LionsgateHelper) | ✅ |  | ✅ |

@@ -1,12 +1,13 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import * as os from 'os'
 import { stringSimilarity } from "string-similarity-js"
 // some vtt download may cause exception if we use `fetch` or `got` library.
 // the error is like `Z_DATA_ERROR incorrect header check`
 // use `isomorphic-fetch` instead
 import fetch from 'isomorphic-fetch'
 
-const CORE_VERSION = 'v1.2'
+const CORE_VERSION = 'v1.3'
 const SCRIPT_NAME = 'AutoSubSyncer'
 
 const DATA_DIR = 'data'
@@ -572,7 +573,7 @@ export class Core {
             return MATCH_TYPE_ALL_SAME
         }
 
-        const multiline_max_offset = this.getConfigInt('subsyncer.match.multiline.offset', MATCH_MULTI_LINE_MAX_OFFSET) * 1000
+        const multiline_max_offset = config['subsyncer.match.multiline.offset']
         const multi_match_vtt = index_vtt < vtt.length - 1 && this.hasWords(vtt[index_vtt + 1].content) 
             && vtt[index_vtt + 1].start - vtt[index_vtt].start <= multiline_max_offset
         const multi_match_ass = index_ass < ass.length - 1 && this.hasWords(ass[index_ass + 1].content_en) 
@@ -606,7 +607,7 @@ export class Core {
             }
         }
 
-        // compare with both emerging two lines
+        // compare with both merging two lines
         if (multi_match_vtt && multi_match_ass) {
             const merged_content_vtt = content_vtt + '\n' + vtt[index_vtt + 1].content
             const merged_content_ass = content_ass + '\n' + ass[index_ass + 1].content_en
@@ -1090,6 +1091,7 @@ export class Core {
             { key: 'subsyncer.alert.offset.words.max', default: MATCH_OFFSET_ALERT_MAX_WORDS, type: 'int' },
             { key: 'subsyncer.alert.offset.max', default: MATCH_OFFSET_MAX, type: 'int' },
             { key: 'subsyncer.same.tolerant.words.min', default: MATCH_SAME_TOLERANT_MIN_WORDS, type: 'int' },
+            { key: 'subsyncer.match.multiline.offset', default: MATCH_MULTI_LINE_MAX_OFFSET * 1000, type: 'int' },
             // float
             { key: 'subsyncer.same.tolerant.ratio', default: MATCH_SAME_TOLERANT_RATIO, type: 'float' },
             // bool
@@ -1162,7 +1164,7 @@ export class Core {
 
     getICloudPath() {
         if (process.platform == 'win32') {
-            return `${process.env.HOME}/iCloudDrive/iCloud~com~crossutility~quantumult-x/Data/Subtitles`
+            return `${os.homedir()}/iCloudDrive/iCloud~com~crossutility~quantumult-x/Data/Subtitles`
         }
         return `${process.env.HOME}/Library/Mobile Documents/iCloud~com~crossutility~quantumult-x/Documents/Data/Subtitles`
     }
