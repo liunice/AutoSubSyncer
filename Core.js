@@ -1022,7 +1022,7 @@ export class Core {
                     resolve({ index: i, content: lines.join('') })
                 }
                 else {
-                    reject(new Error(`invalid vtt body:\n${body}\n`))
+                    reject(new Error(`invalid vtt body:\n${body}\nurl: ${url}`))
                 }
             })
         })

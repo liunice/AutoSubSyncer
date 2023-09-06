@@ -19,6 +19,8 @@ import fetch from 'isomorphic-fetch'
                 return await getVTT_paramount(syncer, url)
             case 'max':
                 return await getVTT_max(syncer, url)
+            case 'skyshowtime':
+                return await getVTT_skyshowtime(syncer, url)
             default:
                 return null
         }
@@ -288,6 +290,52 @@ X-TIMESTAMP-MAP=LOCAL:00:00:00.000,MPEGTS:9000
 
         try {
             content += await syncer.download_vtts(vtt_urls)
+            console.log('Success! All vtt files downloaded.')
+        }
+        catch (e) {
+            console.log('!!! vtt files download failed:', e)
+            return null
+        }
+
+        return content
+    }
+
+    // url = https://g001-vod-eu-cmaf-prd-lu.pcdn01.cssott.com/SST/JO/GMO_00000000106151_01/SST_1659979543722-_Xe4t_01/mpeg_cbcs/master_manifest_default_r40.m3u8?c3.ri=13505819364585617088&audio=all&subtitle=all&forcedNarrative=true
+    async function getVTT_skyshowtime(syncer, url) {
+        // get vtt list url
+        const hlsBody = await getBody(url)
+        // #EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",NAME="english",AUTOSELECT=YES,FORCED=NO,LANGUAGE="en",URI="_780898880.subtitles.0.m3u8"
+        const mHls = /#EXT-X-MEDIA:TYPE=SUBTITLES,GROUP-ID="subs",NAME="english".*?,URI="([^"]+)"/i.exec(hlsBody)
+        if (!mHls) {
+            console.log('vtt字幕列表url获取失败...')
+            return null
+        }
+        // https://g001-vod-eu-cmaf-prd-lu.pcdn01.cssott.com/SST/JO/GMO_00000000106151_01/SST_1659979543722-_Xe4t_01/mpeg_cbcs/r15/text/cc/en-US/tt_111374180.subtitles.9.m3u8
+        let vttListUrl = mHls[1]
+        if (!vttListUrl.startsWith('http')) {
+            // r15/text/cc/en-US/tt_111374180.subtitles.9.m3u8
+            vttListUrl = getPath(url) + vttListUrl
+        }
+        console.log(vttListUrl)
+
+        const body = await getBody(vttListUrl)
+        let content = `WEBVTT
+X-TIMESTAMP-MAP=LOCAL:00:00:00.000,MPEGTS:9000
+
+`
+        // tt_111374180.subtitles.9.split.0.webvtt
+        const vtt_urls = [...body.matchAll(/#EXTINF:([\d\.]+),\s+(.+)/g)].map(m => {
+            if (!m[2].startsWith('http')) {
+                return getPath(vttListUrl) + m[2]
+            }
+            // https://g001-vod-eu-cmaf-prd-lu.pcdn01.cssott.com/SST/JO/GMO_00000000106151_01/SST_1659979543722-_Xe4t_01/mpeg_cbcs/r15/text/cc/en-US/tt_111374180.subtitles.9.split.0.webvtt
+            return m[2]
+        })
+        try {
+            let line = await syncer.download_vtts(vtt_urls)
+            // remove html tags
+            line = line.replace(/<\/?[^>]+>/g, '')
+            content += line
             console.log('Success! All vtt files downloaded.')
         }
         catch (e) {

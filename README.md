@@ -47,6 +47,7 @@ Windows用户需要自行安装iCloud并开启iCloud云盘。
    | [Peacock](https://github.com/liunice/PeacockHelper) | ✅ | ✅ | ✅ |
    | [Lionsgate+/STARZ](https://github.com/liunice/LionsgateHelper) | ✅ |  | ✅ |
    | [Britbox UK](https://github.com/liunice/BritboxHelper) | ✅ |  | ✅ |
+   | [SkyShowtime](https://github.com/liunice/SkyShowtimeHelper) | ✅ |  | ✅ |
 2. 确保``git``工具已安装。如未安装请参考[git官网](https://git-scm.com/downloads)
 3. 安装``NodeJS``最新版，具体方法请参照[NodeJS官网](https://nodejs.org/en/download/)
 4. Windows用户请到``Microsoft Store``安装``iCloud``并开启``iCloud云盘``，并等待云盘下的``Quantumult X``目录完成云同步
