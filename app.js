@@ -183,7 +183,7 @@ X-TIMESTAMP-MAP=LOCAL:00:00:00.000,MPEGTS:9000
 X-TIMESTAMP-MAP=LOCAL:00:00:00.000,MPEGTS:9000
 
 `
-        const vtt_urls = [...body.matchAll(/#EXTINF:\d+\s+(http:\/\/assets\.huluim\.com\/captions_webvtt\/(?!blank).*?\.vtt)/g)].map(m => m[1])
+        const vtt_urls = [...body.matchAll(/#EXTINF:\d+.*?\s+(http:\/\/assets\.huluim\.com\/captions_webvtt\/(?!blank).*?\.vtt)/g)].map(m => m[1])
         try {
             content += await syncer.download_vtts(vtt_urls)
             console.log('Success! All vtt files downloaded.')
